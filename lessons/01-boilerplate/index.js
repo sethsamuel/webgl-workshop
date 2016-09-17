@@ -43,7 +43,7 @@ const vertexSource = `
 gl.shaderSource(vertexShader, vertexSource);
 gl.compileShader(vertexShader);
 if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-  console.error("An error occurred compiling the shader: " + gl.getShaderInfoLog(vertexShader));
+  throw new Error("An error occurred compiling the shader: " + gl.getShaderInfoLog(vertexShader));
 }else{
   console.log("Vertex shader compiled");
 }
@@ -60,7 +60,7 @@ const fragmentSource = `
 gl.shaderSource(fragmentShader, fragmentSource);
 gl.compileShader(fragmentShader);
 if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-  console.error("An error occurred compiling the shader: " + gl.getShaderInfoLog(fragmentShader));
+  throw new Error("An error occurred compiling the shader: " + gl.getShaderInfoLog(fragmentShader));
 }else{
   console.log("Fragment shader compiled");
 }
@@ -73,7 +73,7 @@ gl.attachShader(shaderProgram, fragmentShader);
 gl.linkProgram(shaderProgram);
 
 if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-  console.error("Unable to initialize the shader program.");
+  throw new Error("Unable to initialize the shader program.");
 }else{
   console.log("Initialized shader program");
 }

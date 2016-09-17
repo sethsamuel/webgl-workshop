@@ -17,6 +17,7 @@ resize();
 window.addEventListener('resize', resize);
 // END WINDOW SIZING
 
+
 // GL SETTINGS
 
 // Color to draw on clear
@@ -26,6 +27,7 @@ gl.clearColor(0,0,0,1);
 gl.clear(gl.COLOR_BUFFER_BIT);
 
 // END GL SETTINGS
+
 
 // INITIALIZE SHADERS
 
@@ -99,12 +101,13 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 gl.vertexAttribPointer(vPosition, 3, gl.FLOAT, false, 0, 0);
 // END INITIALIZE BUFFERS
 
+
 // DRAW LOOP
 function draw() {
   // Clear pixels and depth
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  //Draw the vertex array
+  //Draw the vertex arrays
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertices.length / 3);
 
   requestAnimationFrame(draw);

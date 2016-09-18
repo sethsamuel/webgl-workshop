@@ -53,8 +53,11 @@ if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
 const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 const fragmentSource = `
   precision highp float;
+  uniform float uTime;
   void main(void) {
-    gl_FragColor = vec4(1.0, 0, 0, 1.0);
+    float g = abs(sin(uTime/1000.0));
+    float b = abs(cos(uTime/1000.0*2.0));
+    gl_FragColor = vec4(1.0, g, b, 1.0);
   }
 `;
 gl.shaderSource(fragmentShader, fragmentSource);
@@ -99,12 +102,18 @@ const vPosition = gl.getAttribLocation(shaderProgram, "vPosition");
 gl.enableVertexAttribArray(vPosition);
 //gl.vertexAttribPointer(index, size, type, normalized, stride, offset);
 gl.vertexAttribPointer(vPosition, 3, gl.FLOAT, false, 0, 0);
+
+const uTime = gl.getUniformLocation(shaderProgram, "uTime");
+
 // END POINTERS
 
 // DRAW LOOP
 function draw() {
   // Clear pixels and depth
   gl.clear(gl.COLOR_BUFFER_BIT);
+
+  //Set uniforms
+  gl.uniform1f(uTime, performance.now());
 
   //Draw the vertex arrays
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertices.length / 3);

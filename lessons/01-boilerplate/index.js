@@ -35,9 +35,9 @@ gl.clear(gl.COLOR_BUFFER_BIT);
 const vertexShader = gl.createShader(gl.VERTEX_SHADER);
 const vertexSource = `
   precision highp float;
-  attribute vec3 vPosition;
+  attribute vec3 aPosition;
   void main(void) {
-    gl_Position = vec4(vPosition, 1.0);
+    gl_Position = vec4(aPosition, 1.0);
   }
 `;
 gl.shaderSource(vertexShader, vertexSource);
@@ -95,10 +95,10 @@ gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 // END INITIALIZE BUFFERS
 
 // POINTERS
-const vPosition = gl.getAttribLocation(shaderProgram, "vPosition");
-gl.enableVertexAttribArray(vPosition);
+const aPosition = gl.getAttribLocation(shaderProgram, "aPosition");
+gl.enableVertexAttribArray(aPosition);
 //gl.vertexAttribPointer(index, size, type, normalized, stride, offset);
-gl.vertexAttribPointer(vPosition, 3, gl.FLOAT, false, 0, 0);
+gl.vertexAttribPointer(aPosition, 3, gl.FLOAT, false, 0, 0);
 // END POINTERS
 
 // DRAW LOOP

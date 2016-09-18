@@ -36,7 +36,10 @@ const vertexShader = gl.createShader(gl.VERTEX_SHADER);
 const vertexSource = `
   precision highp float;
   attribute vec3 aPosition;
+  varying vec2 vPosition;
+  uniform vec2 uMousePosition;
   void main(void) {
+    vPosition  = aPosition.xy;
     gl_Position = vec4(aPosition, 1.0);
   }
 `;
@@ -53,11 +56,11 @@ if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
 const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 const fragmentSource = `
   precision highp float;
-  uniform float uTime;
+  varying vec2 vPosition;
+  uniform vec2 uMousePosition;
   void main(void) {
-    float g = abs(sin(uTime/1000.0));
-    float b = abs(cos(uTime/1000.0*2.0));
-    gl_FragColor = vec4(1.0, g, b, 1.0);
+    float saturation = 1.0 - distance(uMousePosition, vPosition);
+    gl_FragColor = vec4(1.0, saturation, 0, 1.0);
   }
 `;
 gl.shaderSource(fragmentShader, fragmentSource);
@@ -103,9 +106,19 @@ gl.enableVertexAttribArray(aPosition);
 //gl.vertexAttribPointer(index, size, type, normalized, stride, offset);
 gl.vertexAttribPointer(aPosition, 3, gl.FLOAT, false, 0, 0);
 
-const uTime = gl.getUniformLocation(shaderProgram, "uTime");
+const uMousePosition = gl.getUniformLocation(shaderProgram, "uMousePosition");
 
 // END POINTERS
+
+// INTERACTION HANDLER
+var mousePosition = [];
+canvas.addEventListener('mousemove', evt => {
+  mousePosition = [
+    (evt.clientX/canvas.width - 0.5) * 2.0,
+    (1.0 - evt.clientY/canvas.height - 0.5) * 2.0
+  ];
+});
+// END INTERACTION HANDLER
 
 // DRAW LOOP
 function draw() {
@@ -113,7 +126,7 @@ function draw() {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   //Set uniforms
-  gl.uniform1f(uTime, performance.now());
+  gl.uniform2f(uMousePosition, mousePosition[0], mousePosition[1]);
 
   //Draw the vertex arrays
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertices.length / 3);

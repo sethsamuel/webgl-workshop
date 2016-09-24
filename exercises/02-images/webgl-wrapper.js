@@ -6,7 +6,7 @@ const gl = canvas.getContext('webgl');
 
 // BEGIN WINDOW SIZING
 function resize() {
-  const size = Math.min(window.innerWidth, window.innerHeight - 48) - 16;
+  const size = Math.min(window.innerWidth, window.innerHeight) - 16;
   canvas.width = size;
   canvas.height = size;
 

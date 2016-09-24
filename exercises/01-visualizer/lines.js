@@ -53,7 +53,7 @@ createVisualizer(vertexSource, fragmentSource, (gl, shaderProgram) => {
         // x1
         vertices.push(x);
         // y1
-        vertices.push((s)/256);
+        vertices.push((s-128)/128);
         // z1
         vertices.push(0);
     });

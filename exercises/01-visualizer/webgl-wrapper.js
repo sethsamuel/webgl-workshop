@@ -72,32 +72,6 @@ window.createVisualizer = (vertexSource, fragmentSource, callback) => {
 
   // END INITIALIZE SHADERS
 
-  // INITIALIZE BUFFERS
-  const vertexBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-  const vertices = [
-    1, 1, 0,
-    -1, 1, 0,
-    1, -1, 0,
-    -1, -1, 0
-  ];
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-  // END INITIALIZE BUFFERS
 
-  // POINTERS
-  const aPosition = gl.getAttribLocation(shaderProgram, "aPosition");
-  gl.enableVertexAttribArray(aPosition);
-  //gl.vertexAttribPointer(index, size, type, normalized, stride, offset);
-  gl.vertexAttribPointer(aPosition, 3, gl.FLOAT, false, 0, 0);
-
-  const uSampler = gl.getUniformLocation(shaderProgram, "uSampler");
-  // END POINTERS
-
-  const tTexture = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, tTexture);
-
-  //Set uniforms
-  gl.uniform1i(uSampler, 0);
-
-  callback(gl);
+  callback(gl, shaderProgram);
 }

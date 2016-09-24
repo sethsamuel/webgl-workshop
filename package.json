@@ -4,7 +4,8 @@
   "description": "WebGL Workshop",
   "main": "index.js",
   "scripts": {
-    "exercise": "http-server exercises/01-visualizer",
+    "visualizer": "http-server exercises/01-visualizer",
+    "images": "http-server exercises/02-images",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

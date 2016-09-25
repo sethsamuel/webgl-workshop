@@ -6,13 +6,25 @@ const vertexSource = `
   uniform sampler2D uSamplerIn;
   uniform sampler2D uSamplerOut;
   uniform vec2 uMousePosition;
+
+  float rand(vec2 co){
+      return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+  }
+
   void main(void) {
     float t = uTime/1000.0;
     vTexturePosition = vec2(aPosition.x + 1.0, 1.0 - aPosition.y) * 0.5;
     gl_PointSize = 1.0;
-    vec2 offset = - (uMousePosition - aPosition.xy) / pow(exp(distance(uMousePosition, aPosition.xy)), 8.0);
-    // float offset = pow(distance(uMousePosition, aPosition.xy), 0.25);
-    gl_Position = vec4(aPosition.xy + 2.0* offset, aPosition.z, 1.0);
+    vec2 offset = - (uMousePosition - aPosition.xy);
+    offset = rand(aPosition.xy) * 0.5 * offset;
+    float distance = distance(uMousePosition, aPosition.xy);
+    float acosX = 3.14*distance;
+    if (acosX > 1.0) {
+      offset = vec2(0.0);
+    } else {
+      offset = offset * acos(acosX);
+    }
+    gl_Position = vec4(aPosition.xy + offset, aPosition.z, 1.0);
   }
 `;
 

@@ -5,13 +5,14 @@ const vertexSource = `
   uniform float uTime;
   uniform sampler2D uSamplerIn;
   uniform sampler2D uSamplerOut;
+  uniform vec2 uMousePosition;
   void main(void) {
     float t = uTime/1000.0;
     vTexturePosition = vec2(aPosition.x + 1.0, 1.0 - aPosition.y) * 0.5;
-    vec4 colorPosition = abs(sin(t)) * texture2D(uSamplerIn, vTexturePosition) + abs(sin(t+3.14/2.0)) * texture2D(uSamplerOut, vTexturePosition);
     gl_PointSize = 1.0;
-    gl_Position = vec4(aPosition.x * sin(t*2.0) + (1.0-sin(t*2.0)) * (colorPosition.x * 2.0 - 1.0), aPosition.y * sin(t*2.0) + (1.0-sin(t*2.0)) * (colorPosition.y * 2.0 - 1.0), aPosition.z, 1.0);
-    // gl_Position = vec4(aPosition.xy, sin(t), 1.0);
+    vec2 offset = - (uMousePosition - aPosition.xy) / pow(exp(distance(uMousePosition, aPosition.xy)), 8.0);
+    // float offset = pow(distance(uMousePosition, aPosition.xy), 0.25);
+    gl_Position = vec4(aPosition.xy + 2.0* offset, aPosition.z, 1.0);
   }
 `;
 
@@ -22,9 +23,7 @@ const fragmentSource = `
   uniform sampler2D uSamplerOut;
   varying vec2 vTexturePosition;
   void main(void) {
-    float t = uTime/2000.0;
-    // gl_FragColor = texture2D(uSamplerIn, vTexturePosition);
-    gl_FragColor = abs(sin(t)) * texture2D(uSamplerIn, vTexturePosition) + abs(1.0-sin(t)) * texture2D(uSamplerOut, vTexturePosition);
+    gl_FragColor = texture2D(uSamplerIn, vTexturePosition);
   }
 `;
 
@@ -57,6 +56,17 @@ createVisualizer(vertexSource, fragmentSource, (gl, shaderProgram) => {
   const uSamplerOut = gl.getUniformLocation(shaderProgram, "uSamplerOut");
 
   const uTime = gl.getUniformLocation(shaderProgram, "uTime");
+  const uMousePosition = gl.getUniformLocation(shaderProgram, "uMousePosition");
+
+  // INTERACTION HANDLER
+  var mousePosition = [];
+  canvas.addEventListener('mousemove', evt => {
+    mousePosition = [
+      (evt.clientX/canvas.width - 0.5) * 2.0,
+      (1.0 - evt.clientY/canvas.height - 0.5) * 2.0
+    ];
+  });
+  // END INTERACTION HANDLER
 
   // DRAW
   function draw(sample) {
@@ -65,6 +75,9 @@ createVisualizer(vertexSource, fragmentSource, (gl, shaderProgram) => {
 
     //Set uniforms
     gl.uniform1f(uTime, performance.now());
+
+    //Set uniforms
+    gl.uniform2f(uMousePosition, mousePosition[0], mousePosition[1]);
 
     //Draw the vertex arrays
     gl.drawArrays(gl.PARTICLES, 0, vertices.length/3);

@@ -1,6 +1,7 @@
 const AudioAnalzer = function(audioElement, sampleType) {
   var sampleCallbacks = [];
 
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
   const audioContext = new AudioContext();
   let source;
   if (audioElement.src) {
